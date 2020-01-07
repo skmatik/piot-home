@@ -17,6 +17,8 @@
 #ifndef HOMEPI_LCD_DRIVER_H
 #define HOMEPI_LCD_DRIVER_H
 
+#include "i2cControl.hpp"
+
 // Define some device parameters
 #define LCD_WIDTH 20   // Maximum characters per line
 #define LCD_ROWS 4 //The number of rows on the LCD

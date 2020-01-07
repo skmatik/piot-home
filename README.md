@@ -9,9 +9,6 @@ Raspberry PI tasks
 - react to rotary encoder button events (perform actions)
 - communicate with Arduino (act as remote terminal) using serial protocol
 ## Todo
-Sensors
-- ask periodically for current values on sensors and store them
-
 Rotary encoder interrupts:
 - button pressed
   - sleep mode -> turn on display, show current status of sensors
@@ -20,4 +17,4 @@ Rotary encoder interrupts:
   - sleep mode - turn on display, show current status of sensors
 
 Serial
-- periodically get sensor value
+- periodically get sensor value 

@@ -10,26 +10,26 @@
 #include "3party/MQTTClient.h"
 #include "TimeConstants.h"
 #include "MQTTFeedAware.h"
+#include "Sensor.h"
 
 using namespace std;
 
-static const char *const CLIENT_ID = "Home PI";
-static const char *const FEED_PREFIX = "skmatik/feeds/";
-static const char *const PAYLOAD = "22.33";
-static const int QOS = 1;
-static const long TIMEOUT = 10000L;
-static const char *const ADDRESS = "tcp://io.adafruit.com:1883";
-static const long INTERVAL = 5 * ONE_MINUTE_IN_SECONDS * ONE_SECOND_IN_MILLISECONDS;
-
-static const int KEEP_ALIVE_IN_SECONDS = 20;
 
 class MQTTPublisher {
 
 private:
+    constexpr static const char *const CLIENT_ID = "Home PI";
+    constexpr static const char *const FEED_PREFIX = "skmatik/feeds/";
+    static const int QOS = 1;
+    static const long TIMEOUT = 10000L;
+    constexpr static const char *const ADDRESS = "tcp://io.adafruit.com:1883";
+    static const long INTERVAL = 5 * ONE_MINUTE_IN_SECONDS * ONE_SECOND_IN_MILLISECONDS;
+    static const int KEEP_ALIVE_IN_SECONDS = 20;
+
     MQTTClient client;
-    vector<MQTTFeedAware *> messageBuilders;
+    vector<Sensor *> *sensors;
 public:
-    MQTTPublisher(const vector<MQTTFeedAware *> & messageBuilders);
+    MQTTPublisher(vector<Sensor *> *sensors);
 
     void connect();
     int publish();

@@ -3,14 +3,18 @@
 //
 
 #include <sstream>
+#include <utility>
 #include "ArduinoTerminalReportBuilder.h"
-
-ArduinoTerminalReportBuilder::ArduinoTerminalReportBuilder(): counter(0) {}
 
 vector<string> ArduinoTerminalReportBuilder::build() {
     vector<string> report = vector<string>();
-    ostringstream reportLine;
-    reportLine << "XResponse: " << counter++ << "$";
-    report.push_back(reportLine.str());
+    for (int i = 0 ; i < sensors->size() ; i++) {
+        string line = string(sensors->operator[](i)->getName());
+        line.append("-");
+        line.append(sensors->operator[](i)->getFormattedValue());
+        report.push_back(line);
+    }
     return report;
 }
+
+ArduinoTerminalReportBuilder::ArduinoTerminalReportBuilder(vector<Sensor *>  *sensors) : sensors(sensors) {}

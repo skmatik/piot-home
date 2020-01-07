@@ -6,7 +6,7 @@
 #include <iostream>
 #include "SerialCommunicator.h"
 
-SerialCommunicator::SerialCommunicator(ReportBuilder &reportBuilder) : reportBuilder(reportBuilder) {
+SerialCommunicator::SerialCommunicator(ReportBuilder *reportBuilder) : reportBuilder(reportBuilder) {
 }
 
 void SerialCommunicator::operator()() {
@@ -14,8 +14,11 @@ void SerialCommunicator::operator()() {
         while (true) {
             if (readCommand()) {
                 cout << "Serial: " << command << endl;
-                if (command == "get$") {
+                if (command == "{S@") {
                     writeResponse();
+                } else if (command.substr(0, 2) == "}T") {
+                    cout << " temp from arduino: " << command.substr(2) << endl;
+                    cout.flush();
                 }
             }
         }
@@ -51,7 +54,7 @@ bool SerialCommunicator::readCommand() {
 }
 
 void SerialCommunicator::writeResponse() {
-    const vector<string> report = reportBuilder.build();
+    const vector<string> report = reportBuilder->build();
     for (const auto& line: report) {
         serialPuts(serialPortFileDescriptor, line.c_str());
         serialPutchar(serialPortFileDescriptor, '$');

@@ -4,32 +4,39 @@
 
 #ifndef HOMEPI_TEMPERATURESENSOR_H
 #define HOMEPI_TEMPERATURESENSOR_H
-static const char *const FEED_NAME = "room-temperature";
 
 #include <string>
 #include "MQTTFeedAware.h"
+#include "Sensor.h"
 
 using namespace std;
 
-class TemperatureSensor : public MQTTFeedAware {
+class TemperatureSensor : public MQTTFeedAware, public Sensor {
 
 private:
     string address;
+    string feedName;
+    string name;
     bool found{};
     double temperature;
-    string getTemperatureAsString();
+    string formattedValue;
+    void updateTemperatureString();
 public:
-    TemperatureSensor(const string &address);
-
-    void readCurrentValue();
+    TemperatureSensor(string address, string feedName, string name);
 
     bool isFound() const;
 
     double getTemperature() const;
 
-    string getFeedValue() override;
+    string & getFeedValue() override;
 
-    string getFeedName() override;
+    string & getFeedName() override;
+
+    string &getName() override;
+
+    string &getFormattedValue() override;
+
+    void read() override;
 };
 
 

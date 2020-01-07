@@ -5,28 +5,34 @@
 #include "TemperatureSensor.h"
 #include <fstream>
 #include <sstream>
+#include <utility>
 
 using namespace std;
 
-void TemperatureSensor::readCurrentValue() {
+void TemperatureSensor::read() {
 
     ifstream sensorFile;
     string sensorPath = "/sys/bus/w1/devices/" + address + "/w1_slave";
     sensorFile.open(sensorPath.c_str());
     if (sensorFile) {
         found = true;
-        string temperatureString;
+        string encodedTemperature;
         stringstream buffer;
         buffer << sensorFile.rdbuf();
-        temperatureString = buffer.str();
+        encodedTemperature = buffer.str();
         sensorFile.close();
-        temperatureString = temperatureString.substr(temperatureString.find("t=") + 2);
-        temperature = stod(temperatureString) / 1000;
+        encodedTemperature = encodedTemperature.substr(encodedTemperature.find("t=") + 2);
+        temperature = stod(encodedTemperature) / 1000;
+        updateTemperatureString();
     }
 }
 
-TemperatureSensor::TemperatureSensor(const string &address) : address(address), found(false), temperature(0) {
-
+TemperatureSensor::TemperatureSensor(string address, string feedName, string name) : address(std::move(address)),
+                                                                                     found(false),
+                                                                                     temperature(0),
+                                                                                     feedName(std::move(feedName)),
+                                                                                     formattedValue(""),
+                                                                                     name(std::move(name)) {
 }
 
 bool TemperatureSensor::isFound() const {
@@ -37,16 +43,24 @@ double TemperatureSensor::getTemperature() const {
     return temperature;
 }
 
-string TemperatureSensor::getFeedValue() {
-    return getTemperatureAsString();
+string &TemperatureSensor::getFeedValue() {
+    return formattedValue;
 }
 
-string TemperatureSensor::getFeedName() {
-    return FEED_NAME;
+string &TemperatureSensor::getFeedName() {
+    return feedName;
 }
 
-string TemperatureSensor::getTemperatureAsString() {
-    std::ostringstream temperatureString;
-    temperatureString << temperature;
-    return temperatureString.str();
+void TemperatureSensor::updateTemperatureString() {
+    std::ostringstream temperatureStringStream;
+    temperatureStringStream << temperature;
+    formattedValue = temperatureStringStream.str();
+}
+
+string &TemperatureSensor::getName() {
+    return name;
+}
+
+string &TemperatureSensor::getFormattedValue() {
+    return formattedValue;
 }

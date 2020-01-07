@@ -7,6 +7,7 @@
 
 
 #include "ReportBuilder.h"
+#include "TemperatureSensor.h"
 #include <vector>
 #include <string>
 
@@ -15,11 +16,12 @@ using namespace std;
 class ArduinoTerminalReportBuilder: public ReportBuilder {
 
 public:
-    ArduinoTerminalReportBuilder();
+    explicit ArduinoTerminalReportBuilder(vector<Sensor*>  *sensors);
+
     vector<string> build() override;
 
 private:
-    int counter;
+    vector<Sensor *> *sensors;
 };
 
 

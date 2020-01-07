@@ -13,6 +13,7 @@ static const int SPEED = 115200;
 #include <wiringSerial.h>
 #include <thread>
 #include "ReportBuilder.h"
+#include "TimeConstants.h"
 
 using namespace std;
 
@@ -21,13 +22,13 @@ class SerialCommunicator {
 private:
     int serialPortFileDescriptor{};
     string command;
-    ReportBuilder &reportBuilder;
+    ReportBuilder *reportBuilder;
 
     bool setupCommunication();
     bool readCommand();
     void writeResponse();
 public:
-    SerialCommunicator(ReportBuilder &reportBuilder);
+    explicit SerialCommunicator(ReportBuilder *reportBuilder);
     void operator()();
 
 };

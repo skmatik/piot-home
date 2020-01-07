@@ -12,8 +12,8 @@ using namespace std;
 
 class MQTTFeedAware {
 public:
-    virtual string getFeedValue() = 0;
-    virtual string getFeedName() = 0;
+    virtual string & getFeedValue() = 0;
+    virtual string & getFeedName() = 0;
 };
 
 
