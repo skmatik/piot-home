@@ -10,6 +10,6 @@ add_executable(homepi main.cpp RotaryEncoder.cpp RotaryEncoder.hpp 3party/lcd/lc
         Sensor.h TemperatureSensor.cpp TemperatureSensor.h SerialCommunicator.cpp SerialCommunicator.h ReportBuilder.h
         ArduinoTerminalReportBuilder.cpp ArduinoTerminalReportBuilder.h
         MQTTPublisher.cpp MQTTPublisher.h TimeConstants.h MQTTFeedAware.h LcdMenuItem.h TemperatureSensorMenuItem.cpp TemperatureSensorMenuItem.h StringMenuItem.cpp StringMenuItem.h
-        SensorReader.cpp SensorReader.h MainController.cpp MainController.h)
+        SensorReader.cpp SensorReader.h MainController.cpp MainController.h CpuTemperatureSensor.cpp CpuTemperatureSensor.h)
 target_link_libraries(homepi ${wiringPi_LIB} Threads::Threads ${PAHO_C_LIB})
 

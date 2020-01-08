@@ -1,7 +1,3 @@
-//
-// Created by martin.maliska on 11/8/2019.
-//
-
 #include <iostream>
 #include "MainController.h"
 #include "TemperatureSensor.h"
@@ -11,6 +7,7 @@
 #include "SerialCommunicator.h"
 #include "MQTTPublisher.h"
 #include "TemperatureSensorMenuItem.h"
+#include "CpuTemperatureSensor.h"
 
 void MainController::execute() {
     unsigned int nextTime = millis() + MENU_REFRESH_INTERVAL_IN_MILLIS;
@@ -71,7 +68,11 @@ MainController::~MainController() {
 
 vector<Sensor *> * MainController::initializeSensors() {
     auto *sensorList = new vector<Sensor *>();
-    sensorList->push_back(new TemperatureSensor("28-011591ac3fff", "room-temperature", "temp1"));
+
+    sensorList->push_back(new TemperatureSensor("28-0000062718bd", "kotol", "Kotol"));
+    sensorList->push_back(new TemperatureSensor("28-000006083434", "bojler", "Bojler"));
+    sensorList->push_back(new TemperatureSensor("28-00000607fcab", "spiatocka", "Spiatocka"));
+    sensorList->push_back(new CpuTemperatureSensor());
     return sensorList;
 }
 

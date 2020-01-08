@@ -1,7 +1,3 @@
-//
-// Created by martin.maliska on 11/8/2019.
-//
-
 #include <wiringPi.h>
 #include <iostream>
 #include "SensorReader.h"
@@ -10,6 +6,7 @@ SensorReader::SensorReader(vector<Sensor *> *sensors) : sensors(sensors) {}
 
 void SensorReader::operator()() {
     unsigned int nextTime = millis() + INTERVAL;
+    readAllSensors();
     while (true) {
         if (millis() >= nextTime) {
             nextTime = millis() + INTERVAL;
