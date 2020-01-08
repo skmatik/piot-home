@@ -31,7 +31,6 @@ void CpuTemperatureSensor::updateTemperatureString() {
     std::ostringstream temperatureStringStream;
     temperatureStringStream << temperature;
     formattedValue = temperatureStringStream.str();
-    cout << " CPU temp: " << formattedValue << endl;
 }
 
 bool CpuTemperatureSensor::isFound() {

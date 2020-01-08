@@ -6,7 +6,7 @@
 #include "ArduinoTerminalReportBuilder.h"
 #include "SerialCommunicator.h"
 #include "MQTTPublisher.h"
-#include "TemperatureSensorMenuItem.h"
+#include "SensorMenuItem.h"
 #include "CpuTemperatureSensor.h"
 
 void MainController::execute() {
@@ -53,20 +53,20 @@ MainController::MainController() {
 }
 
 MainController::~MainController() {
-    delete(serialCommunicatorThread);
-    delete(serialCommunicator);
-    delete(reportBuilder);
-    delete(mqttPublisherThread);
-    delete(mqttPublisher);
-    delete(menu);
-    delete(rotaryEncoder);
-    delete(sensorsReaderThread);
-    delete(sensorReader);
+    delete (serialCommunicatorThread);
+    delete (serialCommunicator);
+    delete (reportBuilder);
+    delete (mqttPublisherThread);
+    delete (mqttPublisher);
+    delete (menu);
+    delete (rotaryEncoder);
+    delete (sensorsReaderThread);
+    delete (sensorReader);
     sensors->clear();
-    delete(sensors);
+    delete (sensors);
 }
 
-vector<Sensor *> * MainController::initializeSensors() {
+vector<Sensor *> *MainController::initializeSensors() {
     auto *sensorList = new vector<Sensor *>();
 
     sensorList->push_back(new TemperatureSensor("28-0000062718bd", "kotol", "Kotol"));
@@ -76,12 +76,10 @@ vector<Sensor *> * MainController::initializeSensors() {
     return sensorList;
 }
 
-LcdMenu * MainController::initializeMenu(vector<Sensor *> *sensorsToAddToMenu) {
+LcdMenu *MainController::initializeMenu(vector<Sensor *> *sensorsToAddToMenu) {
     auto *menuItems = new vector<LcdMenuItem *>();
     for (Sensor *sensor : *sensorsToAddToMenu) {
-        if (auto* temperatureSensor = dynamic_cast<TemperatureSensor*>(sensor)) {
-            menuItems->push_back(new TemperatureSensorMenuItem(temperatureSensor));
-        }
+        menuItems->push_back(new SensorMenuItem(sensor));
     }
     menuItems->push_back(new StringMenuItem("item0"));
     menuItems->push_back(new StringMenuItem("item1"));
