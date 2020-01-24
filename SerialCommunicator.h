@@ -14,6 +14,7 @@ static const int SPEED = 115200;
 #include <thread>
 #include "ReportBuilder.h"
 #include "TimeConstants.h"
+#include "RemoteSensor.h"
 
 using namespace std;
 
@@ -23,12 +24,14 @@ private:
     int serialPortFileDescriptor{};
     string command;
     ReportBuilder *reportBuilder;
+    bool commandComplete;
 
     bool setupCommunication();
     bool readCommand();
     void writeResponse();
+    RemoteSensor * remoteSensor;
 public:
-    explicit SerialCommunicator(ReportBuilder *reportBuilder);
+    explicit SerialCommunicator(ReportBuilder *reportBuilder, RemoteSensor *remoteSensor);
     void operator()();
 
 };

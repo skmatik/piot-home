@@ -4,7 +4,7 @@
 #include "MQTTPublisher.h"
 #include "config.h"
 
-void MQTTPublisher::connect() {
+bool MQTTPublisher::connect() {
 
     MQTTClient_connectOptions conn_opts = MQTTClient_connectOptions_initializer;
     int rc;
@@ -18,8 +18,9 @@ void MQTTPublisher::connect() {
     if ((rc = MQTTClient_connect(client, &conn_opts)) != MQTTCLIENT_SUCCESS) {
         cout << "Failed to connect, return code: " << rc << endl;
         cout.flush();
-        exit(EXIT_FAILURE);
+        return false;
     }
+    return true;
 }
 
 int MQTTPublisher::publish() {
@@ -30,20 +31,22 @@ int MQTTPublisher::publish() {
         if (auto *feedAware = dynamic_cast<MQTTFeedAware *>(sensor)) {
             if (sensor->isFound()) {
                 disconnect();
-                connect();
-                MQTTClient_message message = MQTTClient_message_initializer;
-                const char *value = feedAware->getFeedValue().c_str();
-                message.payload = (void *) value;
-                message.payloadlen = (int) strlen(value);
-                message.qos = QOS;
-                message.retained = 0;
-                string feedTopic = string(FEED_PREFIX).append(feedAware->getFeedName());
-                int rc;
-                cout << "publishing: " << value << " to feed: " << feedTopic << endl;
-                cout.flush();
-                if ((rc = MQTTClient_publishMessage(client, feedTopic.c_str(), &message, &token)) != MQTTCLIENT_SUCCESS) {
-                    cout << "Failed to publish message, return code: " << rc << endl;
+                if (connect()) {
+                    MQTTClient_message message = MQTTClient_message_initializer;
+                    const char *value = feedAware->getFeedValue().c_str();
+                    message.payload = (void *) value;
+                    message.payloadlen = (int) strlen(value);
+                    message.qos = QOS;
+                    message.retained = 0;
+                    string feedTopic = string(FEED_PREFIX).append(feedAware->getFeedName());
+                    int rc;
+                    cout << "publishing: " << value << " to feed: " << feedTopic << endl;
                     cout.flush();
+                    if ((rc = MQTTClient_publishMessage(client, feedTopic.c_str(), &message, &token)) !=
+                        MQTTCLIENT_SUCCESS) {
+                        cout << "Failed to publish message, return code: " << rc << endl;
+                        cout.flush();
+                    }
                 }
             }
         }

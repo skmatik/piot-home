@@ -2,6 +2,7 @@
 #include <sstream>
 #include <iostream>
 #include "CpuTemperatureSensor.h"
+#include "TemperatureFormatter.h"
 
 string &CpuTemperatureSensor::getName() {
     return name;
@@ -28,9 +29,7 @@ void CpuTemperatureSensor::read() {
 }
 
 void CpuTemperatureSensor::updateTemperatureString() {
-    std::ostringstream temperatureStringStream;
-    temperatureStringStream << temperature;
-    formattedValue = temperatureStringStream.str();
+    formattedValue = TemperatureFormatter::format(temperature);
 }
 
 bool CpuTemperatureSensor::isFound() {

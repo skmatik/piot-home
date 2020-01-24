@@ -31,7 +31,7 @@ private:
 public:
     MQTTPublisher(vector<Sensor *> *sensors);
 
-    void connect();
+    bool connect();
     int publish();
     void disconnect();
     void operator()();

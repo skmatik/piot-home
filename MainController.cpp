@@ -43,12 +43,13 @@ MainController::MainController() {
     this->rotaryEncoder = new RotaryEncoder();
     sensors = initializeSensors();
     sensorReader = new SensorReader(sensors);
+    remoteSensor = new RemoteSensor("kuchyna", "Kuchyna");
     sensorsReaderThread = new thread((*sensorReader));
-    menu = initializeMenu(sensors);
+    menu = initializeMenu(sensors, remoteSensor);
     mqttPublisher = new MQTTPublisher(sensors);
     mqttPublisherThread = new thread((*mqttPublisher));
     reportBuilder = new ArduinoTerminalReportBuilder(sensors);
-    serialCommunicator = new SerialCommunicator(reportBuilder);
+    serialCommunicator = new SerialCommunicator(reportBuilder, remoteSensor);
     serialCommunicatorThread = new thread((*serialCommunicator));
 }
 
@@ -62,6 +63,7 @@ MainController::~MainController() {
     delete (rotaryEncoder);
     delete (sensorsReaderThread);
     delete (sensorReader);
+    delete remoteSensor;
     sensors->clear();
     delete (sensors);
 }
@@ -76,8 +78,9 @@ vector<Sensor *> *MainController::initializeSensors() {
     return sensorList;
 }
 
-LcdMenu *MainController::initializeMenu(vector<Sensor *> *sensorsToAddToMenu) {
+LcdMenu *MainController::initializeMenu(vector<Sensor *> *sensorsToAddToMenu, RemoteSensor *remoteSensor) {
     auto *menuItems = new vector<LcdMenuItem *>();
+    menuItems->push_back(new SensorMenuItem(remoteSensor));
     for (Sensor *sensor : *sensorsToAddToMenu) {
         menuItems->push_back(new SensorMenuItem(sensor));
     }

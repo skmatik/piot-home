@@ -6,7 +6,7 @@
 #include <iostream>
 #include "SerialCommunicator.h"
 
-SerialCommunicator::SerialCommunicator(ReportBuilder *reportBuilder) : reportBuilder(reportBuilder) {
+SerialCommunicator::SerialCommunicator(ReportBuilder *reportBuilder, RemoteSensor *remoteSensor) : reportBuilder(reportBuilder), commandComplete(false), remoteSensor(remoteSensor) {
 }
 
 void SerialCommunicator::operator()() {
@@ -16,9 +16,19 @@ void SerialCommunicator::operator()() {
                 cout << "Serial: " << command << endl;
                 if (command == "{S@") {
                     writeResponse();
+                    commandComplete = false;
+                    command.clear();
                 } else if (command.substr(0, 2) == "}T") {
-                    cout << " temp from arduino: " << command.substr(2) << endl;
-                    cout.flush();
+                    if (commandComplete) {
+                        cout << " temp from arduino: " << command.substr(2) << endl;
+                        cout.flush();
+                        remoteSensor->updateTemperatureString(command);
+                        commandComplete = false;
+                        command.clear();
+                    }
+                } else {
+                    commandComplete = false;
+                    command.clear();
                 }
             }
         }
@@ -48,8 +58,12 @@ bool SerialCommunicator::readCommand() {
     while (serialDataAvail(serialPortFileDescriptor)) {
         int c = serialGetchar(serialPortFileDescriptor);
         text.push_back(c);
+        if (c == '@') {
+            commandComplete = true;
+            break;
+        }
     }
-    command = text;
+    command.append(text);
     return !command.empty();
 }
 
@@ -57,9 +71,14 @@ void SerialCommunicator::writeResponse() {
     const vector<string> report = reportBuilder->build();
     for (const auto& line: report) {
         serialPuts(serialPortFileDescriptor, line.c_str());
+        cout << line;
         serialPutchar(serialPortFileDescriptor, '$');
+        cout << '$' << endl;
+        serialFlush(serialPortFileDescriptor);
+        delay(100);
     }
     serialPutchar(serialPortFileDescriptor, '@');
+    cout << '@';
     serialFlush(serialPortFileDescriptor);
     cout << "Serial: response send" << endl;
 }

@@ -26,10 +26,11 @@ private:
     thread *serialCommunicatorThread;
     ArduinoTerminalReportBuilder *reportBuilder;
     vector<Sensor *> * initializeSensors();
-    LcdMenu * initializeMenu(vector<Sensor *> *sensors);
+    LcdMenu * initializeMenu(vector<Sensor *> *sensors, RemoteSensor *remoteSensor);
     SensorReader *sensorReader;
     MQTTPublisher *mqttPublisher;
     SerialCommunicator *serialCommunicator;
+    RemoteSensor *remoteSensor;
     static const long MENU_REFRESH_INTERVAL_IN_MILLIS = 5 * ONE_SECOND_IN_MILLISECONDS;
 
 public:

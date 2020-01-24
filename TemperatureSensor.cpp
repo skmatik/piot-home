@@ -1,7 +1,9 @@
 #include "TemperatureSensor.h"
+#include "TemperatureFormatter.h"
 #include <fstream>
 #include <sstream>
 #include <utility>
+#include <iomanip>
 
 using namespace std;
 
@@ -48,9 +50,7 @@ string &TemperatureSensor::getFeedName() {
 }
 
 void TemperatureSensor::updateTemperatureString() {
-    std::ostringstream temperatureStringStream;
-    temperatureStringStream << temperature;
-    formattedValue = temperatureStringStream.str();
+    formattedValue = TemperatureFormatter::format(temperature);
 }
 
 string &TemperatureSensor::getName() {
