@@ -5,7 +5,13 @@
 #include "StringMenuItem.h"
 
 class CurrentTimeMenuItem : public StringMenuItem {
+private:
+    string itemText;
 
+public:
+    string & getText() override;
+
+    CurrentTimeMenuItem();
 };
 
 

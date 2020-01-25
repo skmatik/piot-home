@@ -1,14 +1,19 @@
 
+#include <chrono>
+#include <iostream>
+#include <iomanip>
 #include "CurrentTimeMenuItem.h"
 
-/*
-auto start = std::chrono::system_clock::now();
-// Some computation here
-auto end = std::chrono::system_clock::now();
+string &CurrentTimeMenuItem::getText() {
+    std::time_t t = std::time(nullptr);
+    std::tm tm = *std::localtime(&t);
+    ostringstream os;
+    os << "Cas: " << put_time(&tm, "%T %m-%d");
+    itemText.clear();
+    itemText.append(os.str());
+    return itemText;
+}
 
-std::chrono::duration<double> elapsed_seconds = end-start;
-std::time_t end_time = std::chrono::system_clock::to_time_t(end);
+CurrentTimeMenuItem::CurrentTimeMenuItem() : StringMenuItem("") {
 
-std::cout << "finished computation at " << std::ctime(&end_time)
-<< "elapsed time: " << elapsed_seconds.count() << "s\n";
- */
+}

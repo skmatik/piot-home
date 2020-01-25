@@ -8,6 +8,7 @@
 #include "MQTTPublisher.h"
 #include "SensorMenuItem.h"
 #include "CpuTemperatureSensor.h"
+#include "CurrentTimeMenuItem.h"
 
 void MainController::execute() {
     unsigned int nextTime = millis() + MENU_REFRESH_INTERVAL_IN_MILLIS;
@@ -80,6 +81,7 @@ vector<Sensor *> *MainController::initializeSensors() {
 
 LcdMenu *MainController::initializeMenu(vector<Sensor *> *sensorsToAddToMenu, RemoteSensor *remoteSensor) {
     auto *menuItems = new vector<LcdMenuItem *>();
+    menuItems->push_back(new CurrentTimeMenuItem());
     menuItems->push_back(new SensorMenuItem(remoteSensor));
     for (Sensor *sensor : *sensorsToAddToMenu) {
         menuItems->push_back(new SensorMenuItem(sensor));
