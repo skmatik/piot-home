@@ -1,4 +1,4 @@
-# piot-home
+# piot-home DEPRECATED
 Raspberry PI IOT Home Automation.
 
 Raspberry PI tasks
